@@ -1,25 +1,32 @@
 const mongoose = require('mongoose');
-
+const _     = require('lodash');
 const ExerciseSchema = new mongoose.Schema({
-    userId:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'users'
-    },
-    exercises:[{
         description:{
             type: String,
-            required:true
+            required:true,
+            trim:true
         },
         duration:{
-            type:String,
+            type:Number,
             required:true
         },
         date:{
             type: Date
+        },
+        userId:{
+            type:mongoose.Schema.Types.ObjectId,
+            require:true
         }
-    }]
 })
 
-Exercise = mongoose.model('exercises' ,ExerciseSchema);
+// Instance method
+ExerciseSchema.methods.toJSON =function(){
+    let data = this
+    let dataObject= data.toObject()
+    return _.pick(dataObject,['userId','description','duration','date']);
+}
+
+
+Exercise = mongoose.model('Exercise' ,ExerciseSchema);
    
 module.exports  = {Exercise}
